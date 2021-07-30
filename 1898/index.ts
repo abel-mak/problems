@@ -17,27 +17,24 @@ function maximumRemovals(s: string, p: string, removable: number[]): number {
     return sArray.join('');
   };
 
-  const searchMax = (
-    s: string,
-    p: string,
-    removable: number[],
-    left: number,
-    right: number
-  ): number => {
-    console.log(left, right);
-    if (right - left <= 0) return left;
-    const mid = Math.ceil((left + right) / 2);
-    const rmvMid = removable.slice(0, mid);
-    const removedString = removeLetters(s, rmvMid);
-    console.log(mid, rmvMid, removedString, isSubSeq(removedString, p));
-    if (isSubSeq(removedString, p)) {
-      return searchMax(s, p, removable, mid, right);
-    } else {
-      return searchMax(s, p, removable, left, mid - 1);
+  const searchMax = (s: string, p: string, removable: number[]): number => {
+    let left = 0;
+    let right = removable.length;
+    while (left < right) {
+      console.log(left, right);
+      const mid = Math.ceil((left + right) / 2);
+      const rmvMid = removable.slice(0, mid);
+      const removedString = removeLetters(s, rmvMid);
+      console.log(mid, rmvMid, removedString, isSubSeq(removedString, p));
+      if (isSubSeq(removedString, p)) {
+        left = mid;
+      } else {
+        right = mid - 1;
+      }
     }
+    return left;
   };
-
-  return searchMax(s, p, removable, 1, removable.length);
+  return searchMax(s, p, removable);
 }
 
-console.log(maximumRemovals('abcacb', 'ab', [3, 1, 0]));
+console.log(maximumRemovals('abcab', 'abc', [0, 1, 2, 3, 4]));
