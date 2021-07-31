@@ -11,22 +11,14 @@
  *     }
  * }
  */
-
 function getImportance(employees: Employee[], id: number): number {
-  let importance = 0;
-  const getSubImportance = (id: number, importance: number): number => {
-    const [employee] = employees.filter(
-      (employee: Employee) => employee.id === id
-    );
-    const subIdArray = employee.subordinates;
-    if (subIdArray.length === 0) return employee.importance;
-    const result = subIdArray.reduce(
-      (acc: number, id: number) => acc + getSubImportance(id, importance)
-    );
-    importance += result;
-    return result;
-  };
-
-  getSubImportance(id, importance);
-  return importance;
+  const [employee] = employees.filter(
+    (employee: Employee) => employee.id === id
+  );
+  const subIdArray = employee.subordinates;
+  if (subIdArray.length === 0) return employee.importance;
+  const result = subIdArray.reduce((acc: number, id: number) => {
+    return acc + getImportance(employees, id);
+  }, employee.importance);
+  return result;
 }
